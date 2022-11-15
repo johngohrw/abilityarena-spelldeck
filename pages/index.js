@@ -45,6 +45,12 @@ export default function Home() {
           margin-bottom: 0;
         }
 
+        @media (max-width: 480px) {
+          .title {
+            font-size: 1.4rem;
+          }
+        }
+
         footer {
           color: grey;
           width: 100%;
