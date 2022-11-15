@@ -123,7 +123,6 @@ export default function Spellbook({ ...rest }) {
           flex-direction: row;
           backdrop-filter: grayscale(100%);
           background-color: rgba(18, 3, 30, 0.63);
-          mix-blend-mode: hard-light;
         }
 
         .sidebar {
@@ -143,7 +142,7 @@ export default function Spellbook({ ...rest }) {
         .deck {
           width: 100%;
           padding: 0.4rem;
-          background: rgb(0 0 0 / 44%);
+          background: rgb(0 0 0 / 35%);
         }
 
         .spacer {
@@ -157,13 +156,13 @@ export default function Spellbook({ ...rest }) {
           flex-wrap: wrap;
 
           overflow-y: scroll;
-          height: calc(100vh - 140px);
+          height: calc(100vh - 150px);
         }
 
         .spell-icon-container {
           position: relative;
-          width: 68px;
-          height: 68px;
+          width: 64px;
+          height: 64px;
           padding: 0.2rem;
           background: linear-gradient(
             117deg,
