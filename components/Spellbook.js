@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
-import localFont from "@next/font/local";
 import axios from "axios";
+import BorderDecorTop from "./BorderDecorTop";
+import SearchInput from "./SearchInput";
+import BorderDecorBottom from "./BorderDecorBottom";
 
-const radianceFont = localFont({ src: "../public/Radiance-SemiBold.otf" });
+// enabled abilities will refer to https://double-edge-studios-llc.github.io/enabled_abilities.txt
 
 export default function Spellbook({ ...rest }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [spells, setSpells] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [enabledSpells, setEnabledSpells] = useState([]);
+  const [disabledSpells, setDisabledSpells] = useState([]);
+  const [enabledSpellsList, setEnabledSpellsList] = useState([]);
+
+  const [isLoadingSpells, setIsLoadingSpells] = useState(true);
+  const [isLoadingEnabledList, setIsLoadingEnabledList] = useState(true);
 
   useEffect(() => {
     axios
@@ -18,9 +25,33 @@ export default function Spellbook({ ...rest }) {
         }
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoadingSpells(false);
+      });
+
+    axios
+      .get("https://double-edge-studios-llc.github.io/enabled_abilities.txt")
+      .then((res) => {
+        setEnabledSpellsList(
+          res.data.split("\n").filter((s) => s[0] !== "#" && s[0] !== "!")
+        );
+      })
+      .finally(() => {
+        setIsLoadingEnabledList(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (spells?.length > 0 && enabledSpellsList?.length > 0) {
+      const enabledSpells = spells.filter((spell) =>
+        enabledSpellsList.includes(spell.id)
+      );
+      const disabledSpells = spells.filter(
+        (spell) => !enabledSpellsList.includes(spell.id)
+      );
+      setEnabledSpells(enabledSpells);
+      setDisabledSpells(disabledSpells);
+    }
+  }, [spells, enabledSpellsList]);
 
   return (
     <>
@@ -45,24 +76,33 @@ export default function Spellbook({ ...rest }) {
                 style={{ width: "min(100%,24rem)" }}
               />
             </div>
-            {isLoading ? (
-              <div>fetching spells..</div>
+            {isLoadingSpells ||
+            isLoadingEnabledList ||
+            enabledSpellsList.length === 0 ? (
+              <div>
+                {isLoadingSpells && <div>fetching spells..</div>}
+                {isLoadingEnabledList && (
+                  <div>fetching enabled abilities list..</div>
+                )}
+                {!isLoadingSpells &&
+                  !isLoadingEnabledList &&
+                  enabledSpellsList.length === 0 && (
+                    <div>filtering enabled spells..</div>
+                  )}
+              </div>
             ) : (
               <div className="spell-list">
-                {spells.map(
-                  (spell) =>
-                    console.log(spell) || (
-                      <div key={spell.icon} className="spell-icon-container">
-                        <img
-                          className="spell-icon"
-                          src={`https://abilityarena.com/images/ability_icons/${spell.icon}.png`}
-                        />
-                        {spell.tags.includes("ultimate") && (
-                          <div className="ultimate-tag">U</div>
-                        )}
-                      </div>
-                    )
-                )}
+                {enabledSpells.map((spell) => (
+                  <div key={spell.icon} className="spell-icon-container">
+                    <img
+                      className="spell-icon"
+                      src={`https://abilityarena.com/images/ability_icons/${spell.icon}.png`}
+                    />
+                    {spell.tags.includes("ultimate") && (
+                      <div className="ultimate-tag">U</div>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -81,7 +121,6 @@ export default function Spellbook({ ...rest }) {
         .inner-container {
           display: flex;
           flex-direction: row;
-
           backdrop-filter: grayscale(100%);
           background-color: rgba(18, 3, 30, 0.63);
           mix-blend-mode: hard-light;
@@ -89,7 +128,7 @@ export default function Spellbook({ ...rest }) {
 
         .sidebar {
           width: 14rem;
-          padding: 0 0.3rem;
+          padding: 0 0.5rem;
           flex-shrink: 0;
         }
 
@@ -116,6 +155,9 @@ export default function Spellbook({ ...rest }) {
           justify-content: center;
           flex-direction: row;
           flex-wrap: wrap;
+
+          overflow-y: scroll;
+          height: calc(100vh - 140px);
         }
 
         .spell-icon-container {
@@ -134,6 +176,7 @@ export default function Spellbook({ ...rest }) {
           margin: 0 0.5rem 1rem 0.5rem;
           border: 1px solid #6868682e;
         }
+
         .spell-icon {
           width: 100%;
           height: 100%;
@@ -143,141 +186,6 @@ export default function Spellbook({ ...rest }) {
           position: absolute;
           bottom: 0.2rem;
           right: 0.5rem;
-        }
-      `}</style>
-    </>
-  );
-}
-
-function SearchInput({ ...rest }) {
-  return (
-    <>
-      <input
-        className={`searchInput ${radianceFont.className}`}
-        type="text"
-        {...rest}
-      />
-      <style jsx>{`
-        .searchInput {
-          background: #3e3d4e;
-          border: 1px solid rgb(159 127 211 / 70%);
-          color: var(--font-white);
-          font-size: 1.5rem;
-          height: 2rem;
-          padding: 0 0.4rem;
-        }
-
-        .searchInput:focus {
-          outline: none;
-          border-color: var(--font-gold);
-        }
-      `}</style>
-    </>
-  );
-}
-
-function BorderDecorTop() {
-  return (
-    <>
-      <div className="decor-top">
-        <div className="pointy-corner main">
-          <div className="pointy-corner second">
-            <div className="pointy-corner third">
-              <div className="pointy-corner fourth"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <style jsx>{`
-        .decor-top {
-          //   border-top: 3px solid var(--font-gold);
-          background: linear-gradient(
-            90deg,
-            rgba(113, 84, 40, 1) 0%,
-            rgba(235, 170, 72, 1) 14%,
-            rgba(230, 158, 47, 1) 41%,
-            rgba(148, 102, 30, 1) 56%,
-            rgba(138, 95, 28, 1) 63%,
-            rgba(224, 166, 72, 1) 84%
-          );
-          height: 3px;
-          position: relative;
-        }
-        .pointy-corner {
-          position: absolute;
-          left: 100%;
-          bottom: 100%;
-          height: 3px;
-          background-color: var(--font-gold);
-          transform-origin: bottom left;
-        }
-        .pointy-corner.main {
-          transform: rotate(-45deg);
-          bottom: 0;
-          width: 11px;
-        }
-        .pointy-corner.second {
-          transform: rotate(-90deg);
-          width: 9px;
-        }
-        .pointy-corner.third {
-          transform: rotate(-90deg);
-          width: 6px;
-        }
-        .pointy-corner.fourth {
-          transform: rotate(-90deg);
-          width: 3px;
-        }
-      `}</style>
-    </>
-  );
-}
-
-function BorderDecorBottom() {
-  return (
-    <>
-      <div className="decor-bottom">
-        <div className="pointy-corner main">
-          <div className="pointy-corner second">
-            <div className="pointy-corner third">
-              <div className="pointy-corner fourth"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <style jsx>{`
-        .decor-bottom {
-          border-top: 3px solid var(--font-gold);
-          position: relative;
-        }
-        .pointy-corner {
-          position: absolute;
-          left: 100%;
-          bottom: 100%;
-          height: 3px;
-          background-color: var(--font-gold);
-          transform-origin: top left;
-        }
-        .pointy-corner.main {
-          transform: rotate(45deg);
-          width: 11px;
-        }
-
-        .pointy-corner.second,
-        .pointy-corner.third,
-        .pointy-corner.fourth {
-          left: 100%;
-          top: 100%;
-          transform: rotate(90deg);
-        }
-        .pointy-corner.second {
-          width: 9px;
-        }
-        .pointy-corner.third {
-          width: 6px;
-        }
-        .pointy-corner.fourth {
-          width: 3px;
         }
       `}</style>
     </>

@@ -25,7 +25,7 @@ export default function Home() {
       <style jsx>{`
         .container {
           min-height: 100vh;
-          padding: 1rem;
+          padding: 0.5rem 1rem;
         }
 
         .container {
