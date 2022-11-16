@@ -2,7 +2,9 @@ import Head from "next/head";
 import localFont from "@next/font/local";
 import Spellbook from "../components/Spellbook";
 
-const radianceFont = localFont({ src: "../public/Radiance-SemiBold.otf" });
+const radianceRegularFont = localFont({
+  src: "../public/Radiance.ttf",
+});
 
 export default function Home() {
   return (
@@ -12,7 +14,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={`content ${radianceFont.className}`}>
+      <main className={`content ${radianceRegularFont.className}`}>
         <div>
           <h1 className="title">ABILITY ARENA SPELL DECK</h1>
           <Spellbook />
@@ -57,7 +59,7 @@ export default function Home() {
         }
 
         footer a {
-          color: white;
+          color: grey;
         }
       `}</style>
 
@@ -67,6 +69,9 @@ export default function Home() {
           --font-white: rgba(255, 255, 255, 0.9);
           --font-grey: rgba(255, 255, 255, 0.7);
           --font-dim-grey: rgba(200, 200, 200, 0.5);
+          --font-overlay-dim-purple: rgb(139 107 229 / 80%);
+          --font-overlay-dim-white: rgb(255 255 255 / 74%);
+          --font-overlay-dim-grey: rgb(149 149 149);
 
           --bg-dark: #020320;
           --bg-dark-2: rgb(42, 27, 47);

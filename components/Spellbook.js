@@ -3,6 +3,7 @@ import axios from "axios";
 import BorderDecorTop from "./BorderDecorTop";
 import SearchInput from "./SearchInput";
 import BorderDecorBottom from "./BorderDecorBottom";
+import SpellIcon from "./SpellIcon";
 
 // enabled abilities will refer to https://double-edge-studios-llc.github.io/enabled_abilities.txt
 
@@ -93,15 +94,7 @@ export default function Spellbook({ ...rest }) {
             ) : (
               <div className="spell-list">
                 {enabledSpells.map((spell) => (
-                  <div key={spell.icon} className="spell-icon-container">
-                    <img
-                      className="spell-icon"
-                      src={`https://abilityarena.com/images/ability_icons/${spell.icon}.png`}
-                    />
-                    {spell.tags.includes("ultimate") && (
-                      <div className="ultimate-tag">U</div>
-                    )}
-                  </div>
+                  <SpellIcon spell={spell} key={spell.icon} />
                 ))}
               </div>
             )}
@@ -157,34 +150,6 @@ export default function Spellbook({ ...rest }) {
 
           overflow-y: scroll;
           height: calc(100vh - 150px);
-        }
-
-        .spell-icon-container {
-          position: relative;
-          width: 64px;
-          height: 64px;
-          padding: 0.2rem;
-          background: linear-gradient(
-            117deg,
-            rgba(255, 255, 255, 0.2) 0%,
-            rgba(100, 100, 100, 0.2) 23%,
-            rgba(180, 170, 170, 0.1) 71%,
-            rgba(100, 100, 100, 0.2) 100%
-          );
-          flex-shrink: 0;
-          margin: 0 0.5rem 1rem 0.5rem;
-          border: 1px solid #6868682e;
-        }
-
-        .spell-icon {
-          width: 100%;
-          height: 100%;
-        }
-
-        .ultimate-tag {
-          position: absolute;
-          bottom: 0.2rem;
-          right: 0.5rem;
         }
       `}</style>
     </>

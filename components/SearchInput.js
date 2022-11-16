@@ -1,11 +1,11 @@
 import localFont from "@next/font/local";
-const radianceFont = localFont({ src: "../public/Radiance-SemiBold.otf" });
+const radianceRegularFont = localFont({ src: "../public/Radiance.ttf" });
 
 export default function SearchInput({ ...rest }) {
   return (
     <>
       <input
-        className={`searchInput ${radianceFont.className}`}
+        className={`searchInput ${radianceRegularFont.className}`}
         type="text"
         {...rest}
       />
@@ -14,9 +14,9 @@ export default function SearchInput({ ...rest }) {
           background: #3e3d4e;
           border: 1px solid rgb(159 127 211 / 70%);
           color: var(--font-white);
-          font-size: 1.5rem;
+          font-size: 1.1rem;
           height: 2rem;
-          padding: 0 0.4rem;
+          padding: 0.1rem 0.4rem 0;
         }
         .searchInput:focus {
           outline: none;
