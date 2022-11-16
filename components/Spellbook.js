@@ -32,9 +32,11 @@ export default function Spellbook({ ...rest }) {
     axios
       .get("https://double-edge-studios-llc.github.io/enabled_abilities.txt")
       .then((res) => {
-        setEnabledSpellsList(
-          res.data.split("\n").filter((s) => s[0] !== "#" && s[0] !== "!")
-        );
+        if (res.status === 200) {
+          setEnabledSpellsList(
+            res.data.split("\n").filter((s) => s[0] !== "#" && s[0] !== "!")
+          );
+        }
       })
       .finally(() => {
         setIsLoadingEnabledList(false);
@@ -138,18 +140,11 @@ export default function Spellbook({ ...rest }) {
           background: rgb(0 0 0 / 35%);
         }
 
-        .spacer {
-          margin-bottom: 1rem;
-        }
-
         .spell-list {
           display: flex;
           justify-content: center;
           flex-direction: row;
           flex-wrap: wrap;
-
-          overflow-y: scroll;
-          height: calc(100vh - 150px);
         }
       `}</style>
     </>
