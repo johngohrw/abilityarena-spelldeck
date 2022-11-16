@@ -47,6 +47,9 @@ export default function SpellIcon({ spell, ...rest }) {
           position: absolute;
           bottom: 0.2rem;
           right: 0.5rem;
+          user-select: none;
+          font-weight: 700;
+          font-size: 0.8rem;
         }
       `}</style>
     </>
