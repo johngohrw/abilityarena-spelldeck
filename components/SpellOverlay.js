@@ -19,16 +19,18 @@ export default function SpellOverlay({ spell }) {
         <div className="content-outer">
           <div className="content-inner">
             <div className="categories">
-              {spell?.categories?.map((line) => (
-                <div className="category-line">{line}</div>
+              {spell?.categories?.map((line, i) => (
+                <div key={`${line}-${i}`} className="category-line">
+                  {line}
+                </div>
               ))}
             </div>
             <div className="description">{spell?.description}</div>
             <div className="values">
-              {spell?.values?.map((line) => {
+              {spell?.values?.map((line, i) => {
                 const split = line.split(":");
                 return (
-                  <div className="value-line">
+                  <div className="value-line" key={`${line}-${i}`}>
                     <span className="value-line-key">{split[0]}:</span>
                     <span className="value-line-value">{split[1]}</span>
                   </div>
@@ -42,14 +44,18 @@ export default function SpellOverlay({ spell }) {
                     <div className="cooldown-icon-rect-1" />
                     <div className="cooldown-icon-rect-2" />
                   </div>
-                  {spell?.cooldowns.map((cd) => (
-                    <div className="cooldown-value">{cd}</div>
+                  {spell?.cooldowns.map((cd, i) => (
+                    <div key={`${cd}-${i}`} className="cooldown-value">
+                      {cd}
+                    </div>
                   ))}
                 </div>
                 <div className="mana">
                   <div className="mana-icon" />
-                  {spell?.manaCost.map((mana) => (
-                    <div className="mana-value">{mana}</div>
+                  {spell?.manaCost.map((mana, i) => (
+                    <div key={`${mana}-${i}`} className="mana-value">
+                      {mana}
+                    </div>
                   ))}
                 </div>
               </div>

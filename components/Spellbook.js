@@ -84,9 +84,9 @@ export default function Spellbook({ ...rest }) {
       <div className="container" style={rest.style}>
         <BorderDecorTop />
         <div className="inner-container">
-          <div className="sidebar">
-            <div className="sidebar-title">FILTERS</div>
-          </div>
+          {/* <div className="sidebar-desktop">
+            <FilterSidebar />
+          </div> */}
 
           <div className="deck">
             <div className="search-container">
@@ -140,24 +140,10 @@ export default function Spellbook({ ...rest }) {
           min-height: calc(100vh - 100px);
         }
 
-        .sidebar {
-          width: 14rem;
-          padding: 0 0.5rem;
-          flex-shrink: 0;
-        }
-
         @media (max-width: 780px) {
-          .sidebar {
+          .sidebar-desktop {
             display: none;
           }
-        }
-
-        .sidebar-title {
-          color: var(--font-grey);
-          font-size: 1.2rem;
-          border-bottom: 1px solid var(--font-dim-grey);
-          margin-top: 0.5rem;
-          padding-bottom: 0.2rem;
         }
 
         .deck {
@@ -175,8 +161,8 @@ export default function Spellbook({ ...rest }) {
           background: linear-gradient(
             180deg,
             rgba(35, 29, 40, 1) 0%,
-            rgba(35, 29, 40, 1) 60%,
-            rgba(36, 29, 37, 0.6474964985994398) 84%,
+            rgba(35, 29, 40, 1) 20%,
+            rgba(36, 29, 37, 0.8) 70%,
             rgba(42, 27, 17, 0) 100%
           );
 
@@ -209,12 +195,38 @@ export default function Spellbook({ ...rest }) {
           display: grid;
           grid-gap: 12px;
           grid-template-columns: repeat(auto-fit, 64px);
+          justify-content: center;
         }
 
         @media (max-width: 480px) {
           .spell-list {
             justify-content: space-between;
           }
+        }
+      `}</style>
+    </>
+  );
+}
+
+function FilterSidebar({}) {
+  return (
+    <>
+      <div className="sidebar">
+        <div className="sidebar-title">FILTERS</div>
+      </div>
+      <style jsx>{`
+        .sidebar {
+          width: 14rem;
+          padding: 0 0.5rem;
+          flex-shrink: 0;
+        }
+
+        .sidebar-title {
+          color: var(--font-grey);
+          font-size: 1.2rem;
+          border-bottom: 1px solid var(--font-dim-grey);
+          margin-top: 0.5rem;
+          padding-bottom: 0.2rem;
         }
       `}</style>
     </>
