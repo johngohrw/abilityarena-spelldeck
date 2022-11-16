@@ -126,6 +126,12 @@ export default function Spellbook({ ...rest }) {
           flex-shrink: 0;
         }
 
+        @media (max-width: 780px) {
+          .sidebar {
+            display: none;
+          }
+        }
+
         .sidebar-title {
           color: var(--font-grey);
           font-size: 1.2rem;

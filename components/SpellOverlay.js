@@ -112,7 +112,8 @@ export default function SpellOverlay({ spell }) {
           font-weight: 600;
           margin-left: 0px;
           margin-top: -3px;
-          padding-left: 3px;
+          padding-top: 2px;
+          padding-left: 1px;
           position: absolute;
           width: 38px;
           height: 38px;
