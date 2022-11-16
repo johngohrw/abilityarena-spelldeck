@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { debounce } from "lodash";
 import BorderDecorTop from "./BorderDecorTop";
-import SearchInput from "./SearchInput";
 import BorderDecorBottom from "./BorderDecorBottom";
 import SpellIcon from "./SpellIcon";
+import localFont from "@next/font/local";
+const radianceRegularFont = localFont({ src: "../public/Radiance.ttf" });
 
 // enabled abilities will refer to https://double-edge-studios-llc.github.io/enabled_abilities.txt
 
@@ -11,6 +13,7 @@ export default function Spellbook({ ...rest }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [spells, setSpells] = useState([]);
   const [enabledSpells, setEnabledSpells] = useState([]);
+  const [filteredSpells, setFilteredSpells] = useState([]);
   const [disabledSpells, setDisabledSpells] = useState([]);
   const [enabledSpellsList, setEnabledSpellsList] = useState([]);
 
@@ -56,6 +59,26 @@ export default function Spellbook({ ...rest }) {
     }
   }, [spells, enabledSpellsList]);
 
+  useEffect(() => {
+    const q = searchQuery?.toLowerCase();
+    if (q?.length > 0) {
+      const filtered = enabledSpells.filter(
+        (spell) =>
+          spell.id.toLowerCase().includes(q) ||
+          spell.name.toLowerCase().includes(q) ||
+          spell.tags.reduce((acc, curr) => {
+            if (!acc) {
+              acc = curr.toLowerCase().includes(q);
+            }
+            return acc;
+          }, false)
+      );
+      setFilteredSpells(filtered);
+    } else {
+      setFilteredSpells(enabledSpells);
+    }
+  }, [searchQuery, enabledSpells]);
+
   return (
     <>
       <div className="container" style={rest.style}>
@@ -67,9 +90,11 @@ export default function Spellbook({ ...rest }) {
 
           <div className="deck">
             <div className="search-container">
-              <SearchInput
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: "100%" }}
+              <input
+                onChange={debounce((e) => setSearchQuery(e.target.value), 100)}
+                className={`search-input ${radianceRegularFont.className}`}
+                type="text"
+                {...rest}
               />
             </div>
             {isLoadingSpells ||
@@ -88,7 +113,7 @@ export default function Spellbook({ ...rest }) {
               </div>
             ) : (
               <div className="spell-list">
-                {enabledSpells.map((spell) => (
+                {filteredSpells.map((spell) => (
                   <SpellIcon spell={spell} key={spell.icon} />
                 ))}
               </div>
@@ -142,14 +167,16 @@ export default function Spellbook({ ...rest }) {
         }
 
         .search-container {
+          display: flex;
+          justify-content: center;
           position: sticky;
           top: 0;
           z-index: 10;
           background: linear-gradient(
             180deg,
             rgba(35, 29, 40, 1) 0%,
-            rgba(35, 29, 40, 1) 30%,
-            rgba(36, 29, 37, 0.6474964985994398) 74%,
+            rgba(35, 29, 40, 1) 60%,
+            rgba(36, 29, 37, 0.6474964985994398) 84%,
             rgba(42, 27, 17, 0) 100%
           );
 
@@ -157,11 +184,37 @@ export default function Spellbook({ ...rest }) {
           padding: 0.8rem;
           margin-bottom: 0rem;
         }
+
+        .search-input {
+          background: #3e3d4e;
+          border: 1px solid rgb(159 127 211 / 70%);
+          color: var(--font-white);
+          font-size: 1.1rem;
+          height: 2.3rem;
+          padding: 0.1rem 0.4rem 0;
+          width: 410px;
+        }
+        .search-input:focus {
+          outline: none;
+          background: #4f4e60;
+          border-color: var(--font-gold);
+        }
+        @media (max-width: 480px) {
+          .search-input {
+            width: 100%;
+          }
+        }
+
         .spell-list {
           display: grid;
           grid-gap: 12px;
-          justify-content: space-between;
           grid-template-columns: repeat(auto-fit, 64px);
+        }
+
+        @media (max-width: 480px) {
+          .spell-list {
+            justify-content: space-between;
+          }
         }
       `}</style>
     </>
