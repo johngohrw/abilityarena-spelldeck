@@ -33,7 +33,6 @@ export default function SpellIcon({ spell, ...rest }) {
             rgba(100, 100, 100, 0.2) 100%
           );
           flex-shrink: 0;
-          margin: 0 0.5rem 1rem 0.5rem;
           border: 1px solid #6868682e;
           cursor: pointer;
         }

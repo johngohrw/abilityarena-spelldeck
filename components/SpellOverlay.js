@@ -75,6 +75,7 @@ export default function SpellOverlay({ spell }) {
           border: 2px solid rgb(86, 80, 158);
           background-color: rgb(28, 20, 50);
           width: 400px;
+          max-width: calc(100vw - 28px);
         }
 
         .title-bar {

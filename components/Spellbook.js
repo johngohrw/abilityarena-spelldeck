@@ -76,7 +76,7 @@ export default function Spellbook({ ...rest }) {
             >
               <SearchInput
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: "min(100%,24rem)" }}
+                style={{ width: "100%" }}
               />
             </div>
             {isLoadingSpells ||
@@ -107,14 +107,15 @@ export default function Spellbook({ ...rest }) {
 
       <style jsx>{`
         .container {
-          max-width: 70rem;
-          width: 100%;
+          max-width: calc(100vw - 48px);
+          width: 1000px;
           background: url("/cloud.bmp");
           background-size: 600px;
         }
 
         .inner-container {
           display: flex;
+          width: 100%;
           flex-direction: row;
           backdrop-filter: grayscale(100%);
           background-color: rgba(18, 3, 30, 0.63);
@@ -147,10 +148,10 @@ export default function Spellbook({ ...rest }) {
         }
 
         .spell-list {
-          display: flex;
-          justify-content: center;
-          flex-direction: row;
-          flex-wrap: wrap;
+          display: grid;
+          grid-gap: 12px;
+          justify-content: space-between;
+          grid-template-columns: repeat(auto-fit, 64px);
         }
       `}</style>
     </>
