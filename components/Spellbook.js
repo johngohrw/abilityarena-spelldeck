@@ -66,14 +66,7 @@ export default function Spellbook({ ...rest }) {
           </div>
 
           <div className="deck">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "0.2rem",
-                marginBottom: "0.6rem",
-              }}
-            >
+            <div className="search-container">
               <SearchInput
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{ width: "100%" }}
@@ -119,6 +112,7 @@ export default function Spellbook({ ...rest }) {
           flex-direction: row;
           backdrop-filter: grayscale(100%);
           background-color: rgba(18, 3, 30, 0.63);
+          min-height: calc(100vh - 100px);
         }
 
         .sidebar {
@@ -143,10 +137,26 @@ export default function Spellbook({ ...rest }) {
 
         .deck {
           width: 100%;
-          padding: 0.4rem;
+          padding: 0.8rem;
           background: rgb(0 0 0 / 35%);
         }
 
+        .search-container {
+          position: sticky;
+          top: 0;
+          z-index: 10;
+          background: linear-gradient(
+            180deg,
+            rgba(35, 29, 40, 1) 0%,
+            rgba(35, 29, 40, 1) 30%,
+            rgba(36, 29, 37, 0.6474964985994398) 74%,
+            rgba(42, 27, 17, 0) 100%
+          );
+
+          margin: -0.8rem;
+          padding: 0.8rem;
+          margin-bottom: 0rem;
+        }
         .spell-list {
           display: grid;
           grid-gap: 12px;
