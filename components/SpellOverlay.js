@@ -1,12 +1,12 @@
 import localFont from "@next/font/local";
 
-const radianceFont = localFont({ src: "../public/Radiance.ttf" });
+const radianceRegularFont = localFont({ src: "../public/Radiance.ttf" });
 const reaverBoldFont = localFont({ src: "../public/Reaver-Bold.woff" });
 
-export default function SpellOverlay({ spell }) {
+export default function SpellOverlay({ spell, inheritedFontClassName }) {
   return (
     <>
-      <div className={`overlay-container ${radianceFont.className}`}>
+      <div className={`overlay-container ${inheritedFontClassName}`}>
         <div className="title-bar">
           <div className="level-corner-decor">
             <img src="/corner-decor.svg" className="corner-decor-svg" />

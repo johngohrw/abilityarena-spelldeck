@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { debounce, filter } from "lodash";
+import { debounce } from "lodash";
 import BorderDecorTop from "./BorderDecorTop";
 import BorderDecorBottom from "./BorderDecorBottom";
 import SpellIcon from "./SpellIcon";
@@ -161,7 +161,11 @@ export default function Spellbook({ ...rest }) {
             ) : (
               <div className="spell-list">
                 {filteredSpells.map((spell) => (
-                  <SpellIcon spell={spell} key={spell.icon} />
+                  <SpellIcon
+                    spell={spell}
+                    key={spell.icon}
+                    inheritedFontClassName={radianceRegularFont.className}
+                  />
                 ))}
               </div>
             )}

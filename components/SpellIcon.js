@@ -1,13 +1,18 @@
 import Tippy from "@tippyjs/react/headless";
 import SpellOverlay from "./SpellOverlay";
 
-export default function SpellIcon({ spell, ...rest }) {
+export default function SpellIcon({ spell, inheritedFontClassName, ...rest }) {
   return (
     <>
       <HeadlessTippy
         placement="auto"
         delay={[0, 0]}
-        content={<SpellOverlay spell={spell} />}
+        content={
+          <SpellOverlay
+            spell={spell}
+            inheritedFontClassName={inheritedFontClassName}
+          />
+        }
       >
         <div {...rest} className="spell-icon-container">
           <img
