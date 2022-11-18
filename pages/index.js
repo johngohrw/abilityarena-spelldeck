@@ -19,7 +19,8 @@ export default function Home() {
           <h1 className="title">ABILITY ARENA SPELL DECK</h1>
           <Spellbook />
           <footer>
-            Made by <a href="https://john.shiksha">Rengwu</a>
+            Made by <a href="https://john.shiksha">Rengwu</a> for{" "}
+            <a href="https://abilityarena.com">Ability Arena</a>.
           </footer>
         </div>
       </main>

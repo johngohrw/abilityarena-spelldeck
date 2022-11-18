@@ -5,7 +5,7 @@ export default function SpellIcon({ spell, ...rest }) {
   return (
     <>
       <HeadlessTippy
-        placement="bottom"
+        placement="auto"
         delay={[0, 0]}
         content={<SpellOverlay spell={spell} />}
       >

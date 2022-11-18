@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { debounce } from "lodash";
+import { debounce, filter } from "lodash";
 import BorderDecorTop from "./BorderDecorTop";
 import BorderDecorBottom from "./BorderDecorBottom";
 import SpellIcon from "./SpellIcon";
@@ -9,16 +9,43 @@ const radianceRegularFont = localFont({ src: "../public/Radiance.ttf" });
 
 // enabled abilities will refer to https://double-edge-studios-llc.github.io/enabled_abilities.txt
 
+const initialFilters = {
+  attackDamage: { label: "Attack Damage", checked: false },
+  attackModifier: { label: "Attack Modifier", checked: false },
+  attackRange: { label: "Attack Range", checked: false },
+  attackSpeed: { label: "Attack Speed", checked: false },
+  break: { label: "Break", checked: false },
+  buff: { label: "Buff", checked: false },
+  damageAmplification: { label: "Damage Amplification", checked: false },
+  dispel: { label: "Dispel", checked: false },
+  displacement: { label: "Displacement", checked: false },
+  healing: { label: "Healing", checked: false },
+  instantAttack: { label: "Instant Attack", checked: false },
+  lifesteal: { label: "Lifesteal", checked: false },
+  magicDamage: { label: "Magic Damage", checked: false },
+  magicImmunity: { label: "Magic Immunity", checked: false },
+  manaRegeneration: { label: "Mana Regeneration", checked: false },
+  mobility: { label: "Mobility", checked: false },
+  passive: { label: "Passive", checked: false },
+  silence: { label: "Silence", checked: false },
+  spam: { label: "Spam", checked: false },
+  stats: { label: "Stats", checked: false },
+  stun: { label: "Stun", checked: false },
+  summons: { label: "Summons", checked: false },
+  ultimate: { label: "Ultimate", checked: false },
+};
+
 export default function Spellbook({ ...rest }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [spells, setSpells] = useState([]);
   const [enabledSpells, setEnabledSpells] = useState([]);
   const [filteredSpells, setFilteredSpells] = useState([]);
-  const [disabledSpells, setDisabledSpells] = useState([]);
+  const [disabledSpells, setDisabledSpells] = useState([]); // TODO: do something with this
   const [enabledSpellsList, setEnabledSpellsList] = useState([]);
 
   const [isLoadingSpells, setIsLoadingSpells] = useState(true);
   const [isLoadingEnabledList, setIsLoadingEnabledList] = useState(true);
+  const [filters, setFilters] = useState(initialFilters);
 
   useEffect(() => {
     axios
@@ -60,9 +87,11 @@ export default function Spellbook({ ...rest }) {
   }, [spells, enabledSpellsList]);
 
   useEffect(() => {
+    let filtered = [...enabledSpells];
+
     const q = searchQuery?.toLowerCase();
     if (q?.length > 0) {
-      const filtered = enabledSpells.filter(
+      filtered = filtered.filter(
         (spell) =>
           spell.id.toLowerCase().includes(q) ||
           spell.name.toLowerCase().includes(q) ||
@@ -73,20 +102,38 @@ export default function Spellbook({ ...rest }) {
             return acc;
           }, false)
       );
-      setFilteredSpells(filtered);
-    } else {
-      setFilteredSpells(enabledSpells);
     }
-  }, [searchQuery, enabledSpells]);
+
+    const enabledFilters = Object.entries(filters).reduce((acc, curr) => {
+      const [key, obj] = curr;
+      if (obj.checked) {
+        acc.push(key);
+      }
+      return acc;
+    }, []);
+
+    if (enabledFilters.length > 0) {
+      filtered = filtered.filter((spell) =>
+        spell.tags.reduce((acc, curr) => {
+          if (!acc) {
+            acc = enabledFilters.includes(curr);
+          }
+          return acc;
+        }, false)
+      );
+    }
+
+    setFilteredSpells(filtered);
+  }, [searchQuery, enabledSpells, filters]);
 
   return (
     <>
       <div className="container" style={rest.style}>
         <BorderDecorTop />
         <div className="inner-container">
-          {/* <div className="sidebar-desktop">
-            <FilterSidebar />
-          </div> */}
+          <div className="sidebar-desktop">
+            <FilterSidebar filters={filters} setter={setFilters} />
+          </div>
 
           <div className="deck">
             <div className="search-container">
@@ -208,11 +255,32 @@ export default function Spellbook({ ...rest }) {
   );
 }
 
-function FilterSidebar({}) {
+function FilterSidebar({ filters, setter }) {
+  const handleCheck = (key) => {
+    const newFilters = { ...filters };
+    newFilters[key].checked = !newFilters[key].checked;
+    setter(newFilters);
+  };
   return (
     <>
       <div className="sidebar">
         <div className="sidebar-title">FILTERS</div>
+        <div className="sidebar-button-container">
+          {Object.entries(filters).map(([key, obj]) => {
+            return (
+              <button
+                key={key}
+                className={`filter-button ${radianceRegularFont.className} ${
+                  obj.checked && "checked"
+                }`}
+                onClick={() => handleCheck(key)}
+              >
+                <input readOnly type="checkbox" checked={obj.checked} />
+                {obj.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
       <style jsx>{`
         .sidebar {
@@ -227,6 +295,32 @@ function FilterSidebar({}) {
           border-bottom: 1px solid var(--font-dim-grey);
           margin-top: 0.5rem;
           padding-bottom: 0.2rem;
+        }
+
+        .sidebar-button-container {
+          display: flex;
+          flex-direction: column;
+          margin-top: 0.5rem;
+        }
+        .filter-button {
+          display: flex;
+          align-items: center;
+          border: 0;
+          background: none;
+          padding: 0.2rem 0rem;
+          text-align: left;
+          font-size: 1rem;
+          color: #ccc;
+          cursor: pointer;
+        }
+        .filter-button input {
+          margin-right: 0.4rem;
+        }
+        .filter-button.checked input {
+          background: #bb98ff;
+        }
+        .filter-button.checked {
+          color: #bb98ff;
         }
       `}</style>
     </>
